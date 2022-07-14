@@ -51,6 +51,13 @@ async function run() {
             res.send(result);
         })
 
+        //save blog by user into database
+        app.post('/addBlog', async (req, res) => {
+            const blog = req.body;
+            const result = await BlogCollections.insertOne(blog);
+            res.send(result);
+          });
+
         //update blog by indivisual user
 
 

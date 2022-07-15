@@ -85,18 +85,35 @@ async function run() {
         })
 
         //user comment a blog post
-        app.post('/postComment', async(req, res)=>{
+        app.post('/postComment', async (req, res) => {
             const comment = req.body
             const result = await commentCollection.insertOne(comment);
             res.send(result);
         })
 
         //get comment filter by blog id
-        app.get('/comments/:blogId', async(req, res)=>{
+        app.get('/comments/:blogId', async (req, res) => {
             const blogId = req.params.blogId;
             const query = { blogId: blogId };
             const result = await commentCollection.find(query).toArray();
             res.send(result);
+        })
+
+        //get comment by user email
+        app.get('/commentbyUser/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { commentorEmail: email };
+            const result = await commentCollection.find(query).toArray();
+            res.send(result);
+        })
+
+
+        //delete comment by user
+        app.delete('/deleteComment/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await commentCollection.deleteOne(query)
+            res.send(result)
         })
 
 

@@ -54,12 +54,35 @@ async function run() {
         //save blog by user into database
         app.post('/addBlog', async (req, res) => {
             const blog = req.body;
+            console.log(blog)
             const result = await BlogCollections.insertOne(blog);
             res.send(result);
-          });
+        });
 
-        //update blog by indivisual user
+        //get update blog by indivisual user
+        app.get('/blog/update/:_id', async (req, res) => {
+            const id = req.params._id;
+            const query = { _id: ObjectId(id) };
+            const result = await BlogCollections.findOne(query)
+            res.send(result)
+        })
 
+        //update blog by user
+        app.put('/updateBlog/:_id', async (req, res) => {
+            const id = req.params._id;
+            const blog = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set: blog,
+            };
+            const result = await BlogCollections.updateOne(
+                filter,
+                updatedDoc,
+                options
+            );
+            res.send(result)
+        })
 
 
     } finally {

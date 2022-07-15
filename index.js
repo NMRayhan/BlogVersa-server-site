@@ -1,5 +1,4 @@
 const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
-// const jwt = require("jsonwebtoken");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -19,7 +18,9 @@ app.get('/', (req, res) => {
 
 async function run() {
     const BlogCollections = client.db("BlogVersa").collection("Blogs");
+    const commentCollection = client.db("BlogVersa").collection("Comment");
     const categoryCollection = client.db("BlogVersa").collection("category")
+
     try {
         client.connect()
 
@@ -54,7 +55,6 @@ async function run() {
         //save blog by user into database
         app.post('/addBlog', async (req, res) => {
             const blog = req.body;
-            console.log(blog)
             const result = await BlogCollections.insertOne(blog);
             res.send(result);
         });
@@ -82,6 +82,21 @@ async function run() {
                 options
             );
             res.send(result)
+        })
+
+        //user comment a blog post
+        app.post('/postComment', async(req, res)=>{
+            const comment = req.body
+            const result = await commentCollection.insertOne(comment);
+            res.send(result);
+        })
+
+        //get comment filter by blog id
+        app.get('/comments/:blogId', async(req, res)=>{
+            const blogId = req.params.blogId;
+            const query = { blogId: blogId };
+            const result = await commentCollection.find(query).toArray();
+            res.send(result);
         })
 
 

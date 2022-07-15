@@ -116,13 +116,16 @@ async function run() {
             res.send(result)
         })
 
-
     } finally {
         // await client.close();
     }
 }
 
 run().catch(console.dir);
+
+app.get('/', (req, res)=>{
+    res.send("Running Server from BlogVersa")
+})
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
